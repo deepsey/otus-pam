@@ -103,7 +103,7 @@
      exit 0
     fi
 
-#### 4. Копируем наш скрипт в /user/local/bin/
+#### 4. Копируем наш скрипт в /user/local/bin/, даем права на запуск
 
     - name: Copy admin_login.sh  
       copy:  
