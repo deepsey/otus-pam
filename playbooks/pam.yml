@@ -54,14 +54,10 @@
   
   tasks:
   
-   # - name: UNSET SELINUX
-   #   command: setenforce 0
-  
+ 
     - name: INSTALL DOCKER
       shell: curl -sSL https://get.docker.com | sh
-    #  yum:
-    #    name: docker
-    #    state: present
+    
       
     - name: STARTING AND ENABLING DOCKER
       systemd:
@@ -74,9 +70,7 @@
         name: vagrant
         groups: docker
         
-    #- name: ENABLING DOCKER GROUP FOR USER
-    #  command: newgrp docker
-      
+        
     - name: RESTARTING DOCKER SERVICE 
       systemd:
         name: docker
@@ -85,37 +79,4 @@
     - name: COPY 01-systemd.rules
       copy:
         src: ../data/01-systemd.rules
-        dest: /etc/polkit-1/rules.d/    
-    
-    
-  #  - name: INSERT STRING TO /etc/pam.d/login
-  #    lineinfile: 
-  #      path: /etc/pam.d/sshd
-   #     insertafter: auth       include      postlogin
-  #      line: auth    required     pam_cap.so
-  #      state: present
-        
- #  - name: CREATE /etc/security/cabability.conf
- #     file:
- #       path: /etc/security/cabability.conf
-  #      state: touch
-        
-  #  - name: INSERT STRING TO /etc/security/cabability.conf
- #     lineinfile: 
-  #      path: /etc/security/cabability.conf  
- #       line: cap_docker_service    vagrant
- #       state: present
- #       
-  #  - name: SET PERMISSIONS FOR docker
- #     shell: setcap cap_docker_service=ei /usr/bin/docker
-        
-      
-     
-      
-   
-  
-   
-    
-    
-    
-
+        dest: /etc/polkit-1/rules.d/  
