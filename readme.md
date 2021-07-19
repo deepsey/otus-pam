@@ -123,7 +123,7 @@
   
     tasks:
 
-#### 1. Устанавливаем docker, активируем с стартуем сервис.
+#### 1. Устанавливаем docker, активируем и стартуем сервис.
 
     - name: INSTALL DOCKER  
       shell: curl -sSL https://get.docker.com | sh  
@@ -211,4 +211,5 @@
    
 Рестартим сервис docker от пользователя vagrant:   
 
-    [vagrant@otus-pam ~]$ systemctl restart docker
+    [vagrant@otus-pam ~]$ systemctl restart docker  
+    [vagrant@otus-pam ~]$
