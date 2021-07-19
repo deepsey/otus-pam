@@ -1,0 +1,82 @@
+---
+- name: PAM | Permit login for admin group
+  hosts: otus-pam
+  become: true
+    
+  tasks:
+  
+    - name: Create admin group
+      group:
+        name: admin
+      
+    - name: Create user admin1
+      user:
+        name: admin1
+        groups: admin
+               
+    - name: Create user admin2
+      user:
+        name: admin2
+        groups: admin
+        
+        
+    - name: Create user user1
+      user:
+        name: user1
+        
+    - name: SET PASSWORDS
+      shell: echo "admin1" | passwd --stdin admin1 && echo "admin2" | passwd --stdin admin2 && echo "user1" | passwd --stdin user1
+                
+    - name: Add vagrant to admin group
+      user:
+        name: vagrant
+        groups: admin
+        
+    - name: Insert string in /etc/pam.d/login file    
+      lineinfile: 
+        path: /etc/pam.d/login
+        insertafter: account    required     pam_nologin.so
+        line: account    required     pam_exec.so   /usr/local/bin/admin_login.sh
+        state: present
+        
+    - name: Copy admin_login.sh
+      copy:
+        src: ../data/admin_login.sh
+        dest: /usr/local/bin/  
+        
+    - name: SET CHMOD FOR  /usr/local/bin/admin_login.sh
+      command: chmod u+x /usr/local/bin/admin_login.sh
+      
+
+- name: PAM | PERMIT START DOCKER FOR VAGRANT
+  hosts: otus-pam
+  become: true
+  
+  tasks:
+  
+ 
+    - name: INSTALL DOCKER
+      shell: curl -sSL https://get.docker.com | sh
+    
+      
+    - name: STARTING AND ENABLING DOCKER
+      systemd:
+        name: docker
+        state: started
+        enabled: yes  
+      
+    - name: ADDING vagrant TO DOCKER GROUP
+      user:
+        name: vagrant
+        groups: docker
+        
+        
+    - name: RESTARTING DOCKER SERVICE 
+      systemd:
+        name: docker
+        state: restarted
+        
+    - name: COPY 01-systemd.rules
+      copy:
+        src: ../data/01-systemd.rules
+        dest: /etc/polkit-1/rules.d/  
